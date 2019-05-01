@@ -9,6 +9,15 @@ namespace ConsoleApp2
 {
     class Program
     {
+        public static void ShowNamesOfVendors(List<Manufacturer> listOfVendors)
+        {
+            foreach(var i in listOfVendors)
+                Console.WriteLine(i.Name);
+
+            Console.WriteLine("Exit");
+            Console.WriteLine(AdditionalCaption.EnterNameOfVendor);
+        }
+
 
         public static void DriveSportCar(SportCar c)
         {
@@ -88,6 +97,7 @@ namespace ConsoleApp2
 
         static class AdditionalCaption
         {
+            public const string EnterNameOfVendor = "Enter name of vendor: ";
             public const string EnterNitroCaption = "Enter size of nitro of sport car: ";
             public const string EnterLoadCapacityCaption = "Enter load capacity of truck: ";
             public const string WrongInput = "Wrong input";
@@ -110,26 +120,6 @@ namespace ConsoleApp2
             }
         }
 
-        public static Management GetChoice()
-        {
-            try
-            {
-                Console.WriteLine("Enter menu item:");
-                Console.WriteLine("1 - Management first vendor");
-                Console.WriteLine("2 - Management first vendor");
-                Console.WriteLine("0 - Exit");
-
-                Management x = (Management)Enum.Parse(typeof(Management), Console.ReadLine());
-
-                return x;
-            }
-            catch
-            {
-                Console.WriteLine(AdditionalCaption.WrongInput);
-                return 0;
-            }
-        }
-
         public static AuthorityVendors GetCase()
         {
             try
@@ -139,7 +129,6 @@ namespace ConsoleApp2
                 Console.WriteLine("2 - Create truck");
                 Console.WriteLine("3 - Drive sport car");
                 Console.WriteLine("4 - Move sport car with a truck");
-
                 Console.WriteLine("0 - Exit");
 
                 AuthorityVendors x = (AuthorityVendors)Enum.Parse(typeof(AuthorityVendors), Console.ReadLine());
@@ -151,13 +140,6 @@ namespace ConsoleApp2
                 Console.WriteLine(AdditionalCaption.WrongInput);
                 return 0;
             }
-        }
-
-        public enum Management
-        {
-            Exit = 0,
-            Vendor1 = 1,
-            Vendor2 = 2
         }
 
         public enum AuthorityVendors
@@ -173,31 +155,40 @@ namespace ConsoleApp2
         static void Main(string[] args)
         {
 
-            Manufacturer m1 = new Manufacturer("BMW", 3);
-            Manufacturer m2 = new Manufacturer("Audi", 3);
-
-            Management choice = 0;
-
-            do
+            List<Manufacturer> listOfVendors = new List<Manufacturer>
             {
-                choice = GetChoice();
+                new Manufacturer("BMW", 3),
+                new Manufacturer("Audi", 3)
+            };
 
-                switch (choice)
+            string tempName = " ";
+            bool found = false;
+            
+
+            while (true)
+            {
+                ShowNamesOfVendors(listOfVendors);
+                tempName = Console.ReadLine();
+
+                if (tempName == "Exit")
+                    break;
+
+                foreach (var x in listOfVendors)
                 {
-                    case Management.Vendor1:
-                        VendorsManagment(m1);
+                    if (tempName == x.Name)
+                    {
+                        VendorsManagment(x);
+                        found = true;
                         break;
-                    case Management.Vendor2:
-                        VendorsManagment(m2);
-                        break;
-                    case Management.Exit:
-                        break;
-                    default:
-                        Console.WriteLine(AdditionalCaption.WrongInput);
-                        break;
+                    }
                 }
-            } while (choice != Management.Exit);
 
+                if (!found)
+                {
+                    Console.WriteLine(AdditionalCaption.WrongInput);
+                }
+                found = false;
+            }
         }
     }
 }
